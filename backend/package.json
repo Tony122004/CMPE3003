@@ -1,15 +1,15 @@
 {
-  "name": "backend",
+  "name": "healthlink-api",
   "version": "1.0.0",
-  "main": "server.js",
+  "main": "app.js",
   "type": "module",
   "scripts": {
-    "start": "node server.js",
-    "server": "nodemon server.js"
+    "start": "node app.js",
+    "server": "nodemon app.js"
   },
   "author": "",
   "license": "ISC",
-  "description": "",
+  "description": "HealthLink clinic booking API",
   "dependencies": {
     "bcrypt": "^5.1.1",
     "cloudinary": "^2.3.0",

@@ -1,49 +1,54 @@
-import React, { useContext } from 'react'
-import { DoctorContext } from './context/DoctorContext';
-import { AdminContext } from './context/AdminContext';
-import { Route, Routes } from 'react-router-dom'
-import { ToastContainer } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
-import Navbar from './components/Navbar'
-import Sidebar from './components/Sidebar'
-import Dashboard from './pages/Admin/Dashboard';
-import AllAppointments from './pages/Admin/AllAppointments';
-import AddDoctor from './pages/Admin/AddDoctor';
-import DoctorsList from './pages/Admin/DoctorsList';
-import Login from './pages/Login';
-import DoctorAppointments from './pages/Doctor/DoctorAppointments';
-import DoctorDashboard from './pages/Doctor/DoctorDashboard';
-import DoctorProfile from './pages/Doctor/DoctorProfile';
+import { useContext } from "react"
+import { Route, Routes } from "react-router-dom"
+import { ToastContainer } from "react-toastify"
+import "react-toastify/dist/ReactToastify.css"
+import PanelHeader from "./components/PanelHeader"
+import NavRail from "./components/NavRail"
+import Gate from "./pages/Gate"
+import StaffOverview from "./pages/staff/Overview"
+import BookingBoard from "./pages/staff/BookingBoard"
+import ClinicianForm from "./pages/staff/ClinicianForm"
+import ClinicianRoster from "./pages/staff/ClinicianRoster"
+import ClinicianOverview from "./pages/clinician/Overview"
+import Schedule from "./pages/clinician/Schedule"
+import ProfileEditor from "./pages/clinician/ProfileEditor"
+import { ClinicianStore } from "./store/ClinicianStore"
+import { StaffStore } from "./store/StaffStore"
 
-const App = () => {
-
-  const { dToken } = useContext(DoctorContext)
-  const { aToken } = useContext(AdminContext)
-
-  return dToken || aToken ? (
-    <div className='min-h-screen bg-canvas'>
+function AuthenticatedShell() {
+  return (
+    <div className="min-h-screen bg-canvas">
       <ToastContainer />
-      <Navbar />
-      <div className='flex items-start'>
-        <Sidebar />
+      <PanelHeader />
+      <div className="flex items-start">
+        <NavRail />
         <Routes>
-          <Route path='/' element={<></>} />
-          <Route path='/admin-dashboard' element={<Dashboard />} />
-          <Route path='/all-appointments' element={<AllAppointments />} />
-          <Route path='/add-doctor' element={<AddDoctor />} />
-          <Route path='/doctor-list' element={<DoctorsList />} />
-          <Route path='/doctor-dashboard' element={<DoctorDashboard />} />
-          <Route path='/doctor-appointments' element={<DoctorAppointments />} />
-          <Route path='/doctor-profile' element={<DoctorProfile />} />
+          <Route path="/" element={<></>} />
+          <Route path="/admin-dashboard" element={<StaffOverview />} />
+          <Route path="/all-appointments" element={<BookingBoard />} />
+          <Route path="/add-doctor" element={<ClinicianForm />} />
+          <Route path="/doctor-list" element={<ClinicianRoster />} />
+          <Route path="/doctor-dashboard" element={<ClinicianOverview />} />
+          <Route path="/doctor-appointments" element={<Schedule />} />
+          <Route path="/doctor-profile" element={<ProfileEditor />} />
         </Routes>
       </div>
     </div>
-  ) : (
-    <>
-      <ToastContainer />
-      <Login />
-    </>
   )
 }
 
-export default App
+export default function App() {
+  const { dToken } = useContext(ClinicianStore)
+  const { aToken } = useContext(StaffStore)
+
+  if (dToken || aToken) {
+    return <AuthenticatedShell />
+  }
+
+  return (
+    <>
+      <ToastContainer />
+      <Gate />
+    </>
+  )
+}
